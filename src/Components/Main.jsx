@@ -4,6 +4,7 @@ import "./Main.css";
 export default function Main() {
   const [addBtn, setaddBtn] = useState("none");
   const [task, setTask] = useState([]);
+  const [selected, setSelected] = useState([]);
 
   const hideShow = () => {
     if (addBtn === "none") {
@@ -36,15 +37,25 @@ export default function Main() {
       ]);
 
       setaddBtn("none");
+      title.current.value = "";
+      desc.current.value = "";
     }
   };
 
   const deleteTask = (Currenttask) => {
+    // console.log(Currenttask);
     let taskid = Currenttask.id;
 
     let remainingTask = task.filter((item, i) => item.id !== taskid);
     setTask(remainingTask);
   };
+  const editTask = (Currenttask, index) => {
+    setSelected(Currenttask);
+    console.log(Currenttask);
+    // setaddBtn("block");
+    console.log(index);
+  };
+
   return (
     <div className="parent">
       <button className="add-btn" onClick={hideShow}>
@@ -78,13 +89,15 @@ export default function Main() {
             {task
               .filter((item, i) => item.status === "pending")
               .map((item, i) => (
-                <div key={i} className="task-div">
+                <div
+                  key={i}
+                  className="task-div"
+                  onClick={(Currenttask, index) => editTask(item, i)}
+                >
                   <button
                     className="x-btn-2"
                     onClick={(task) => deleteTask(item)}
-                  >
-                    X
-                  </button>
+                  ></button>
 
                   {item.title}
                 </div>
@@ -98,7 +111,11 @@ export default function Main() {
             {task
               .filter((item, i) => item.status === "completed")
               .map((item, i) => (
-                <div key={i} className="task-div">
+                <div
+                  key={i}
+                  onClick={(Currenttask, index) => editTask(item, i)}
+                  className="task-div"
+                >
                   <button
                     className="x-btn-2"
                     onClick={(task) => deleteTask(item)}
